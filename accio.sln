@@ -1,0 +1,30 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.11.35222.181
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{CCAFFA37-371C-4783-AC44-F632914A1915}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "accio.cli", "src\accio.cli\accio.cli.csproj", "{25E24800-246C-4D20-B0E2-7D657107890E}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{25E24800-246C-4D20-B0E2-7D657107890E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{25E24800-246C-4D20-B0E2-7D657107890E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{25E24800-246C-4D20-B0E2-7D657107890E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{25E24800-246C-4D20-B0E2-7D657107890E}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{25E24800-246C-4D20-B0E2-7D657107890E} = {CCAFFA37-371C-4783-AC44-F632914A1915}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {A2D4B623-51D9-4606-A322-23B03B89DC71}
+	EndGlobalSection
+EndGlobal
