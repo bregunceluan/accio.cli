@@ -10,20 +10,29 @@ using System.Threading.Tasks;
 
 namespace accio.cli.Models;
 
-public record Postgres
-(
-    [Option("u", Description = "Database user")]
-    string UserName="postgres",
+public class Postgres : ICommandParameterSet
+{
+    [Option('u', Description = "Database user")]
+    [HasDefaultValue]
+    public string UserName { get; set; } = "postgres";
 
-    [Option("d", Description = "Database name")]
-    string DataBaseName="postgres",
+    [Option('d', Description = "Database name")]
+    [HasDefaultValue]
+    public string DataBaseName { get; set; } = "postgres";
 
-    [Option("h", Description = "Database url")]
-    string Host = "localhost",
+    [Option('h', Description = "Database url")]
+    [HasDefaultValue]
+    public string Host { get; set; } = "localhost";
 
-    [Option("p", Description = "Database port")]
-    int Port = 5432
-) : ICommandParameterSet;
+    [Option('p', Description = "Database port")]
+    [HasDefaultValue]
+    public int Port { get; set; } = 5432;
+
+    public override string? ToString()
+    {
+        return $"user: {UserName}, db: {DataBaseName}, host:{Host}:{Port}";
+    }
+}
 
 
 public static class PostgresOperations

@@ -5,28 +5,18 @@
 
 ![Accio CLI Logo](assets/accio-cli-logo.png)
 <br />
-Accio CLI started as a personal project to assist me with my daily development tasks, particularly in managing backups and automating routine operations. Over time, I realized its potential to help other developers as well, so I decided to make it open-source for anyone who wants to use it.
+Ever been tasked with manipulating a database—editing it, then needing to restore the data afterward? Accio CLI simplifies database management by providing easy-to-use commands to create, restore, and list databases. It also supports environment profiles (like dev, staging, and production), so you don’t have to retype connection details every time.
+Check out the documentation for full details and examples.
 
   
 
 ## Features
 
-  
-
--  **Check if PostgreSQL is installed**
-
--  **Verify database existence**
-
--  **List all databases**
-
--  **Create a new database**
-
--  **Backup a PostgreSQL database**
-
+-  **Create a PostgreSQL database backup**
 -  **Restore a PostgreSQL database from a backup**
+-  **List, create, check databases**
+- **Create profiles to most used servers**
 
-  
-  
 
 ## Requirements
 
@@ -41,170 +31,163 @@ Accio CLI started as a personal project to assist me with my daily development t
   
 
 ## Installation
-
   
-
-To use Accio CLI, clone the repository and build the project:
+The best option to use the Accio is to publish the cli, copy files to folder, and add it to the environmentvariable. This way you will be able to access it from any folder.
 
   
 
 ```sh
 
 # Clone the repository
-
 git  clone  https://github.com/bregunceluan/accio.cli.git
 
-  
-
 # Navigate to the project directory
-
 cd  accio-cli
 
-  
+# Publish the folder (ex: to Windows 64bits)
+#Windows
+dotnet publish -r win-x64 -p:PublishSingleFile=true
 
-# Build the project
+# Move to the folder published
+cd .\\bin\\Release\\net8.0\\win-x64\\publish\\
 
-dotnet  build
+# Create a recommended folder for CLI tools
+# This folder will store your CLI tool permanently
+mkdir %USERPROFILE%\.tools\AccioCLI
+
+# Copy the published files to that folder
+copy * %USERPROFILE%\.tools\AccioCLI\
+
+# Map this folder to the environment variables.
 
 ```
 
   
-
 ## Usage
-
-  
-
-Run the CLI application using the following command:
-
-  
-
+Once the CLI is mapped to your system’s environment variables, you can run it using the following command:
 ```sh
 
-dotnet  run  -- [category] [command] [options]
+# the format of the commands expected
+accio.cli.exe [commands] [options]
 
 ```
+You can append --help or -h to any command to view available options and usage instructions.
 
-  
+
+
 
 ### Available Commands
 
-  
+
+#### Profiles Commands 
+Profiles are preconfigured database settings stored in configs/config.json. They help avoid typing connection details repeatedly by allowing you to save commonly used configurations such as dev, staging, or production.
+
+
+```sh
+#List the profile existant
+accio.cli.exe profile listprofiles
+```
+
+```json
+// You will get response like this: 
+
+📂 Available Profiles:
+
+[dev]
+
+{
+  "Postgres": {
+    "UserName": "postgres",
+    "DataBaseName": "postgres",
+    "Host": "localhost",
+    "Port": 5432
+  }
+}
+----------------------------------------
+[prod]
+
+{
+  "Postgres": {
+    "UserName": "prod",
+    "DataBaseName": "users",
+    "Host": "prod.enviroment.com",
+    "Port": 5432
+  }
+}
+----------------------------------------
+```
+
+-  **Create a new profile**
+```sh
+#Creating a new profile to staging
+accio.cli.exe profile postgres --name staging --u stagin --d users --h staging.enviroment.com --p 5433
+```
+
+-  **Delete a profile**
+```sh
+#Deleting the staging profile
+accio.cli.exe profile delete --profile staging
+```
+
 
 #### PostgreSQL Commands
 
-  
-
--  **Check if PostgreSQL is installed**
-
-```sh
-
-dotnet run -- db installed
-
-```
-
-  
+To any of the postgres command, you can either use the typed postgres server configs or the profile.
 
 -  **Verify if a database exists**
 
 ```sh
+#Check if the database 'db_teste' exists to the default configuration (list those dafaults typing accio.cli.exe db exist --help)
+accio.cli.exe db exist --d db_teste --pass <db_password>
 
-dotnet run -- db exist --pass <db_password>
+#Check the same, but at this time to the dev enviroment
+accio.cli.exe db exist --profile dev --pass <db_password>
 
 ```
-
-  
 
 -  **List all databases**
 
 ```sh
 
-dotnet run -- db listdatabases --pass <db_password>
+#List the database to the dev profile
+accio.cli.exe db listdatabases --profile dev --pass <db_password>
+
+#List the databases existent
+accio.cli.exe db listdatabases --u <user_name> --d <database_name> --h <url> --p <port>
 
 ```
-
-  
 
 -  **Create a new database**
 
 ```sh
 
-dotnet run -- db create --pass <db_password>
+#Create a new database to with the dev profile configs
+accio.cli.exe db create --pass <db_password> -d <new_db_name> --profile dev
+
 
 ```
-
-  
 
 -  **Backup a PostgreSQL database**
 
 ```sh
+#Create a backup to the database 'ftc' with the dev profile. 
+accio.cli.exe db backup --pass <db_password> --profile dev -d <db_name> --file <path_to_save>
 
-dotnet run -- db backup --pass <db_password> --file <backup_path>
+#Create a backup to the server typed.
+accio.cli.exe db backup --pass <db_password> --profile dev -u <user> -d <db_name> -h <port> --file <path_to_save>
 
 ```
-
-  
 
 -  **Restore a PostgreSQL database backup**
 
 ```sh
-
-dotnet run -- db set --pass <db_password> --file <backup_path> --force (if needed)
-
-```
-
-  
-
-#### MongoDB Commands
-
-  
-
--  **Backup a MongoDB database**
-
-```sh
-
-dotnet run -- mongo backup --db <database_name> --file <backup_path>
+#Set the backup file
+accio.cli.exe db set --profile dev --pass <db_pass> --file <path_dump_file> -d <db_name>
 
 ```
 
-  
-
--  **Restore a MongoDB backup**
-
-```sh
-
-dotnet run -- mongo restore --db <database_name> --file <backup_path>
-
-```
-
-  
-
-#### Docker Commands
-
-  
-
--  **Backup a Docker container volume**
-
-```sh
-
-dotnet run -- docker backup --volume <volume_name> --file <backup_path>
-
-```
-
-  
-
--  **Restore a Docker container volume**
-
-```sh
-
-dotnet run -- docker restore --volume <volume_name> --file <backup_path>
-
-```
-
-  
 
 ## Configuration
-
-  
 
 The `Postgres` model allows setting default values for:
 
@@ -223,8 +206,6 @@ These can be overridden via command-line options.
   
 
 ## Contributing
-
-  
 
 Contributions are welcome! To contribute:
 

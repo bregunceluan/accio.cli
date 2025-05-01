@@ -1,47 +1,87 @@
-﻿using accio.cli.Models;
+﻿using accio.cli.Ebuildertensions;
+using accio.cli.Models;
 using Cocona;
+using Cocona.Command;
+using Cocona.Help.DocumentModel;
+using Cocona.Help;
+using System.Net.Http.Json;
+using System.Text.Json;
+using System.Text.Json.Nodes;
+using System.Text.Json.Serialization;
+using Cocona.Application;
+using Microsoft.Extensions.DependencyInjection;
+using System.Reflection;
+
 
 public class Program
 {
     private static void Main(string[] args)
     {
-        var app = CoconaApp.Create();
+        var builder = CoconaApp.CreateBuilder();
+
+        var app = builder.Build();
 
         app.AddSubCommand("db", x =>
         {
-            x.AddCommand("exist", async (Postgres postgres, [Option("pass", Description = "DB password")] string pass) =>
-            {
-                await postgres.DatabaseExist(pass);
-            }).WithDescription("Checks if the database exists.");
+            x.MapPostgresCommands();
+        });
 
-            x.AddCommand("listdatabases", async (Postgres postgres, [Option("pass", Description = "DB password")] string pass) =>
-            {
-                await postgres.ListDatabases(pass);
-            }).WithDescription("Lists existing databases.");
-
-            x.AddCommand("create", async (Postgres postgres, [Option("pass", Description = "DB password")] string pass) =>
-            {
-                await postgres.CreateDatabase(pass);
-            }).WithDescription("Creates a database with the given name.");
-
-            x.AddCommand("backup", async (Postgres postgres, [Option("pass", Description = "DB password")] string pass, [Option("file", Description = "Path to save the backup")] string filePath) =>
-            {
-                await postgres.SaveBackup(pass, filePath);
-            }).WithDescription("Creates a backup of a database.");
-
-            x.AddCommand("set", async (Postgres postgres, [Option("pass", Description = "DB password")] string pass, [Option("file")] string filePath, [Option("force", Description = "Force is required when a change is made outside localhost.")] bool isForced) =>
-            {
-                await postgres.SetFileDump(isForced, pass, filePath);
-            }).WithDescription("Sets a backup file in a database.");
-
-            x.AddCommand("installed", async (Postgres postgres) =>
-            {
-                await postgres.IsPostgresInstalled();
-            }).WithDescription("Checks if the psql library is installed.");
+        app.AddSubCommand("profile", x =>
+        {
+            x.MapProfileCommands();
         });
 
 
         app.Run();
+
+
     }
 
+
+
+
+}
+
+[SampleTransformHelpAttribute]
+class Mes
+{
+
+}
+
+class ApplicationMetadataProvider : ICoconaApplicationMetadataProvider
+{
+
+    public string GetDescription() => "Eru CLI";
+
+    public string GetExecutableName() => "EruCLI";
+
+    public string GetProductName() => "Eru Cli";
+
+    public string GetVersion() => "1.0.0.0";
+}
+
+
+class SampleTransformHelpAttribute : TransformHelpAttribute
+{
+    public override void TransformHelp(HelpMessage helpMessage, CommandDescriptor command)
+    {
+        var descSection = (HelpSection)helpMessage.Children.First(x => x is HelpSection section && section.Id == HelpSectionId.Description);
+        descSection.Children.Add(new HelpPreformattedText(@"
+  ________ 
+ < Hello! >
+  -------- 
+         \   ^__^
+          \  (oo)\_______
+             (__)\       )\/\
+                 ||----w |
+                 ||     ||
+"));
+
+        helpMessage.Children.Add(new HelpSection(
+            new HelpHeading("Example:"),
+            new HelpSection(
+                new HelpParagraph("MyApp --foo --bar")
+            )
+        ));
+    }
 }

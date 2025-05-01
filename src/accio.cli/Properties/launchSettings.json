@@ -1,0 +1,20 @@
+{
+  "profiles": {
+    "accio.cli": {
+      "commandName": "Project",
+      "commandLineArgs": "profile postgres --name teste --u admin --h 10.0.0.9"
+    },
+    "delete-profile": {
+      "commandName": "Project",
+      "commandLineArgs": "profile delete --profile teste"
+    },
+    "list-profiles": {
+      "commandName": "Project",
+      "commandLineArgs": "profile listprofiles"
+    },
+    "version": {
+      "commandName": "Project",
+      "commandLineArgs": "--version"
+    }
+  }
+}
