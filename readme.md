@@ -8,8 +8,8 @@
 Ever been tasked with manipulating a database—editing it, then needing to restore the data afterward? Accio CLI simplifies database management by providing easy-to-use commands to create, restore, and list databases. It also supports environment profiles (like dev, staging, and production), so you don’t have to retype connection details every time.
 Check out the documentation for full details and examples.
 
-  
-
+ ![Accio CLI gif](assets/usage_gif.gif)
+ 
 ## Features
 
 -  **Create a PostgreSQL database backup**
